@@ -52,23 +52,31 @@
     <div style="width: 600px; padding: 50px">
     <h5>Upami anjeun kersa nyarios,
         eusian data di handap </h5>
-    <form action="">
+        <div class="alert alert-success myalert d-none alert-dismissible fade show" role="alert">
+            <strong>Suksés!</strong> pesen dikirim !!
+            
+          </div>
+    <form action="" name="submit-to-google-sheet">
         <div>
             <label for="Nama"></label>Nama :</label>
         </div>
         <div>
-            <input type="text" name="Nama" id="Nama">
+            <input type="text" name="nama" id="Nama">
         </div>
         <div>
             <label for="Email"></label>Email :</label>
         </div>
         <div>
-            <input type="text" name="Email" id="Email">
+            <input type="text" name="email" id="Email">
         </div>
         <div>
             <textarea id="pesan" name="pesan" rows="4" cols="50" placeholder="Tulis Pesan Anda disini"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary btnkirim">Submit</button>
+        <button class="btn btn-primary btnloading d-none" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
     </form>
     </div>
 
@@ -94,7 +102,26 @@
     </a>
 
 </div>
-
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzxN_ntijjXmDexaRhj2cStdn6GUHHVP2FYK8LSDreFpgqMYc4F0SGvUd7o2R-xLWqo8g/exec'
+    const form = document.forms['submit-to-google-sheet'];
+    const btnkirim = document.querySelector('.btnkirim');
+    const btnloading = document.querySelector('.btnloading');
+    const myalert = document.querySelector('.myalert');
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+      btnloading.classList.toggle('d-none');
+            btnkirim.classList.toggle('d-none');
+      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        .then(response => {
+            btnloading.classList.toggle('d-none');
+            btnkirim.classList.toggle('d-none');
+            myalert.classList.toggle('d-none');
+            form.reset();
+            console.log('Success!', response)})
+        .catch(error => console.error('Error!', error.message))
+    })
+  </script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="../js/bootstrap.min.js"></script>
